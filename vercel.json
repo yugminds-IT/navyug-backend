@@ -1,6 +1,0 @@
-{
-  "buildCommand": "mkdir -p public && cp vercel-placeholder.html public/index.html",
-  "installCommand": "echo 'Backend runs on Coolify — skipping Python install.'",
-  "outputDirectory": "public",
-  "framework": null
-}
