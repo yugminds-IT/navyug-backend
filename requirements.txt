@@ -1,6 +1,6 @@
 # Core dependencies
 numpy
-opencv-python
+opencv-python-headless
 insightface
 onnxruntime
 tqdm
