@@ -1,17 +1,37 @@
-numpy==1.26.4
-opencv-python==4.9.0.80
-insightface==0.7.3
-onnxruntime==1.17.3
+# Core dependencies
+numpy
+opencv-python
+insightface
+onnxruntime
 tqdm
-fastapi==0.115.0
-uvicorn[standard]==0.32.0
-python-multipart==0.0.12
 
-# Multi-model fusion dependencies (ArcFace + FaceNet)
-# Install these for multi-model embedding fusion:
-# pip install torch torchvision facenet-pytorch
-# Note: ArcFace is already available via InsightFace (uses ArcFace internally)
-torch==2.10.0
-torchvision==0.25.0
-facenet-pytorch==2.6.0
+# Web framework
+fastapi
+uvicorn[standard]
+python-multipart
+pydantic[email]
 
+# Database
+sqlalchemy
+psycopg2-binary
+alembic
+
+# Authentication & Security
+python-jose[cryptography]
+passlib[bcrypt]
+python-multipart
+
+# AWS S3
+boto3
+botocore
+
+# Multi-model fusion dependencies
+torch
+torchvision
+facenet-pytorch
+
+# Email
+fastapi-mail
+
+# Utilities
+python-dotenv

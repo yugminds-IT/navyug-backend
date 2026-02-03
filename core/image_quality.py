@@ -140,18 +140,27 @@ def detect_duplicate_images(
     return duplicate_groups
 
 
+def _path_display_name(path) -> str:
+    """Display name for path: Path.name, or last segment of S3 key, or str(path)."""
+    if hasattr(path, "name"):
+        return getattr(path, "name", str(path))
+    if isinstance(path, str):
+        return path.split("/")[-1] if "/" in path else path
+    return str(path)
+
+
 def remove_duplicates_keep_best(
     image_data_list: List[Dict],
     similarity_threshold: float = 0.85,
     dry_run: bool = False
-) -> Tuple[List[Dict], List[Path], Dict]:
+) -> Tuple[List[Dict], List, Dict]:
     """
     Remove duplicate images, keeping only the best quality image from each duplicate group.
     
     Args:
         image_data_list: List of dicts with keys:
             - 'embedding': face embedding (np.ndarray)
-            - 'image_path': path to image file (Path object)
+            - 'image_path': path to image (Path object or str S3 key)
             - 'image': image array (for quality scoring)
             - 'face_bbox': bounding box (for quality scoring)
         similarity_threshold: Minimum similarity to consider duplicates
@@ -160,7 +169,7 @@ def remove_duplicates_keep_best(
     Returns:
         Tuple of:
         - filtered_image_data_list: List with duplicates removed (only best quality kept)
-        - deleted_files: List of file paths that were/would be deleted
+        - deleted_files: List of paths that were/would be deleted (only local Paths are unlinked)
         - stats: Dict with statistics about the deduplication
     """
     if len(image_data_list) < 2:
@@ -209,9 +218,9 @@ def remove_duplicates_keep_best(
             kept_indices.discard(idx)
         
         print(f"  Duplicate group: {len(group)} images")
-        print(f"    Keeping: {image_data_list[best_idx]['image_path'].name} (quality: {quality_scores[0][1]:.3f})")
+        print(f"    Keeping: {_path_display_name(image_data_list[best_idx]['image_path'])} (quality: {quality_scores[0][1]:.3f})")
         for idx, score, path in quality_scores[1:]:
-            print(f"    Removing: {path.name} (quality: {score:.3f})")
+            print(f"    Removing: {_path_display_name(path)} (quality: {score:.3f})")
     
     # Filter the list to keep only non-duplicate images
     filtered_list = [image_data_list[i] for i in range(len(image_data_list)) if i not in indices_to_remove]
@@ -222,13 +231,15 @@ def remove_duplicates_keep_best(
         "images_kept": len(filtered_list)
     }
     
-    # Delete files if not dry run
+    # Delete only local files if not dry run (never unlink S3 keys)
     if not dry_run:
         for file_path in deleted_files:
-            try:
-                file_path.unlink()
-                print(f"    Deleted: {file_path.name}")
-            except Exception as e:
-                print(f"    Warning: Could not delete {file_path.name}: {e}")
+            if isinstance(file_path, Path) and file_path.exists():
+                try:
+                    file_path.unlink()
+                    print(f"    Deleted: {file_path.name}")
+                except Exception as e:
+                    print(f"    Warning: Could not delete {file_path.name}: {e}")
+            # S3 keys (str) are not deleted from disk; they are just dropped from the in-memory list
     
     return filtered_list, deleted_files, stats

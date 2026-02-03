@@ -1,0 +1,2736 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+		"name": "Face Recognition API",
+		"description": "Complete API collection for Face Recognition System with PostgreSQL, S3, and security features",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Public Endpoints",
+			"item": [
+				{
+					"name": "Root - API Information",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								""
+							]
+						},
+					"description": "Get API information and available endpoints. Public endpoint."
+					},
+					"response": []
+				},
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"health"
+							]
+						},
+						"description": "Health check endpoint for monitoring. Public endpoint."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Master Admin Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    pm.environment.set('access_token', response.access_token);",
+									"    pm.environment.set('refresh_token', response.refresh_token);",
+									"    pm.environment.set('session_key', response.session_key || '');",
+									"    pm.environment.set('user_id', response.user.id);",
+									"    pm.environment.set('user_role', response.user.role);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"login_id\": \"admin@example.com\",\n    \"password\": \"Password@123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login/master-admin",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login",
+								"master-admin"
+							]
+						},
+						"description": "Master admin login endpoint"
+					},
+					"response": []
+				},
+				{
+					"name": "Management Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    pm.environment.set('access_token', response.access_token);",
+									"    pm.environment.set('refresh_token', response.refresh_token);",
+									"    pm.environment.set('session_key', response.session_key || '');",
+									"    pm.environment.set('user_id', response.user.id);",
+									"    pm.environment.set('user_role', response.user.role);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"login_id\": \"college_admin\",\n    \"password\": \"Password@123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login/management",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login",
+								"management"
+							]
+						},
+						"description": "Management login endpoint"
+					},
+					"response": []
+				},
+				{
+					"name": "Faculty Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    pm.environment.set('access_token', response.access_token);",
+									"    pm.environment.set('refresh_token', response.refresh_token);",
+									"    pm.environment.set('session_key', response.session_key || '');",
+									"    pm.environment.set('user_id', response.user.id);",
+									"    pm.environment.set('user_role', response.user.role);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"login\": \"faculty@example.com\",\n    \"password\": \"Password@123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login/faculty",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login",
+								"faculty"
+							]
+						},
+						"description": "Faculty login endpoint"
+					},
+					"response": []
+				},
+				{
+					"name": "Student Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    pm.environment.set('access_token', response.access_token);",
+									"    pm.environment.set('refresh_token', response.refresh_token);",
+									"    pm.environment.set('session_key', response.session_key || '');",
+									"    pm.environment.set('user_id', response.user.id);",
+									"    pm.environment.set('user_role', response.user.role);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"college_id\": \"STUDENT001\",\n    \"password\": \"Password@123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login/student",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login",
+								"student"
+							]
+						},
+						"description": "Student login endpoint using college ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Master Admin Sign Up",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"Password@123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/signup/master-admin",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"signup",
+								"master-admin"
+							]
+						},
+						"description": "Master admin sign-up endpoint. Password must be 6+ chars, contain 1 number and 1 special character."
+					},
+					"response": []
+				},
+				{
+					"name": "Management Sign Up",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"college_name\": \"ABC College\",\n    \"college_code\": \"COLLEGE001\",\n    \"email\": \"management@college.com\",\n    \"phone\": \"+1234567890\",\n    \"password\": \"Password@123\",\n    \"address\": \"123 College Street\",\n    \"username\": \"college_admin\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/signup/management",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"signup",
+								"management"
+							]
+						},
+						"description": "Management self-signup endpoint. If college_code exists, links to it. If not, creates a new college. Students/faculty with this college_code will be auto-linked to this management user."
+					},
+					"response": []
+				},
+				{
+					"name": "Faculty Sign Up",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Dr. John Doe\",\n    \"faculty_id\": \"FAC001\",\n    \"email\": \"faculty@college.com\",\n    \"password\": \"Password@123\",\n    \"department_name\": \"Computer Science\",\n    \"college_code\": \"COLLEGE001\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/signup/faculty",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"signup",
+								"faculty"
+							]
+						},
+						"description": "Faculty sign-up endpoint. If college_code is provided, faculty will be auto-linked to the management user of that college."
+					},
+					"response": []
+				},
+				{
+					"name": "Student Sign Up",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Jane Smith\",\n    \"roll_number\": \"STU001\",\n    \"branch\": \"Computer Science\",\n    \"year\": \"2024\",\n    \"email\": \"student@college.com\",\n    \"password\": \"Password@123\",\n    \"college_code\": \"COLLEGE001\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/signup/student",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"signup",
+								"student"
+							]
+						},
+						"description": "Student sign-up endpoint. If college_code is provided, student will be auto-linked to the management user of that college."
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    pm.environment.set('access_token', response.access_token);",
+									"    pm.environment.set('refresh_token', response.refresh_token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refresh_token\": \"{{refresh_token}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/refresh",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"refresh"
+							]
+						},
+						"description": "Refresh access token using refresh token"
+					},
+					"response": []
+				},
+				{
+					"name": "Check User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"emailOrRoll\": \"user@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/check-user",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"check-user"
+							]
+						},
+						"description": "Check if user exists by email or roll number. Returns existence, email, and whether password is set."
+					},
+					"response": []
+				},
+				{
+					"name": "Send OTP",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"user@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/send-otp",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"send-otp"
+							]
+						},
+						"description": "Send OTP to email address. OTP expires in 10 minutes."
+					},
+					"response": []
+				},
+				{
+					"name": "Verify OTP",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"user@example.com\",\n    \"otp\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/verify-otp",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"verify-otp"
+							]
+						},
+						"description": "Verify OTP code. Returns success if OTP is valid and not expired."
+					},
+					"response": []
+				},
+				{
+					"name": "Setup Password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"user@example.com\",\n    \"password\": \"Password@123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/setup-password",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"setup-password"
+							]
+						},
+						"description": "Set password for first-time setup (post-OTP verification). User should verify OTP first."
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"user@example.com\",\n    \"password\": \"NewPassword@123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/reset-password",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"reset-password"
+							]
+						},
+						"description": "Reset password (forgot password flow). User should verify OTP first."
+					},
+					"response": []
+				},
+				{
+					"name": "Login (Unified)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    pm.environment.set('access_token', response.access_token);",
+									"    pm.environment.set('refresh_token', response.refresh_token);",
+									"    pm.environment.set('session_key', response.session_key || '');",
+									"    pm.environment.set('user_id', response.user.id);",
+									"    pm.environment.set('user_role', response.user.role);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"user@example.com\",\n    \"password\": \"Password@123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Unified login endpoint with email + password. Returns JWT tokens and user info."
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/auth/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"logout"
+							]
+						},
+						"description": "Logout (invalidate session/token)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Current User Info",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/auth/me",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"me"
+							]
+						},
+						"description": "Get current authenticated user information"
+					},
+					"response": []
+				},
+				{
+					"name": "Create API Key",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"My API Key\",\n    \"expires_days\": 30\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/api-keys",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"api-keys"
+							]
+						},
+						"description": "Create a new API key for the current user"
+					},
+					"response": []
+				},
+				{
+					"name": "List API Keys",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/auth/api-keys",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"api-keys"
+							]
+						},
+						"description": "List all API keys for the current user"
+					},
+					"response": []
+				},
+				{
+					"name": "Revoke API Key",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/auth/api-keys/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"api-keys",
+								"1"
+							]
+						},
+						"description": "Revoke an API key by ID. Replace '1' with actual key ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Create College",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"college_code\": \"COLLEGE001\",\n    \"name\": \"ABC College\",\n    \"address\": \"123 College Street\",\n    \"contact_email\": \"contact@college.com\",\n    \"contact_phone\": \"+1234567890\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/master-admin/colleges",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"master-admin",
+								"colleges"
+							]
+						},
+						"description": "Create a new college (master admin only). Must be created before creating management accounts for it."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Management Account",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"login_id\": \"college_admin\",\n    \"password\": \"Password@123\",\n    \"email\": \"management@college.com\",\n    \"full_name\": \"College Administrator\",\n    \"college_code\": \"COLLEGE001\",\n    \"college_name\": \"ABC College\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/master-admin/management",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"master-admin",
+								"management"
+							]
+						},
+						"description": "Create a management account for a college (master admin only). Links management to college via college_code. If college_name is provided, updates the college name. Students/faculty with this college_code will be auto-linked to this management user."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Management (Master)",
+			"item": [
+				{
+					"name": "List Users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/users?role=management&status=active&page=1&limit=20",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users"
+							],
+							"query": [
+								{
+									"key": "role",
+									"value": "management",
+									"description": "Filter by role: management, faculty, student"
+								},
+								{
+									"key": "status",
+									"value": "active",
+									"description": "Filter by status: active, inactive, suspended"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "Search by name or email",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						},
+						"description": "List users by role (paginated, filterable). Master admin only."
+					},
+					"response": []
+				},
+				{
+					"name": "Get User by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/users/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"1"
+							]
+						},
+						"description": "Get user by ID. Master admin only. Replace '1' with actual user ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"role\": \"student\",\n    \"collegeId\": 1,\n    \"department\": \"Computer Science\",\n    \"year\": \"2024\",\n    \"rollNumber\": \"STU001\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						},
+						"description": "Create user (management / faculty / student). Master admin only."
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Doe Updated\",\n    \"email\": \"john.updated@example.com\",\n    \"status\": \"active\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/users/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"1"
+							]
+						},
+						"description": "Update user. Master admin only. Replace '1' with actual user ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/users/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"1"
+							]
+						},
+						"description": "Soft-deactivate user. Master admin only. Replace '1' with actual user ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Reset User Password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"newPassword\": \"NewPassword@123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/users/1/reset-password",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"1",
+								"reset-password"
+							]
+						},
+						"description": "Admin reset user password. Master admin only. Replace '1' with actual user ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Stats",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/users/stats",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"stats"
+							]
+						},
+						"description": "Get user counts by role. Master admin only."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Profile",
+			"item": [
+				{
+					"name": "Get Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/profile",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"profile"
+							]
+						},
+						"description": "Get own profile. All authenticated users."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Updated Name\",\n    \"email\": \"updated@example.com\",\n    \"department\": \"Computer Science\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/profile",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"profile"
+							]
+						},
+						"description": "Update own profile. All authenticated users."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Colleges",
+			"item": [
+				{
+					"name": "List Colleges",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/colleges?status=active&page=1&limit=20",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"colleges"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "active",
+									"description": "Filter by status: active, inactive"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "Search by name or code",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						},
+						"description": "List colleges. Master: all colleges, Management: own college only."
+					},
+					"response": []
+				},
+				{
+					"name": "Get College by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/colleges/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"colleges",
+								"1"
+							]
+						},
+						"description": "Get college by ID. Master and Management (own college only). Replace '1' with actual college ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Create College",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"ABC College\",\n    \"code\": \"COLLEGE001\",\n    \"address\": \"123 College Street\",\n    \"phone\": \"+1234567890\",\n    \"email\": \"contact@college.com\",\n    \"website\": \"https://college.com\",\n    \"departments\": [\n        {\"name\": \"Computer Science\"},\n        {\"name\": \"Electrical Engineering\"}\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/colleges",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"colleges"
+							]
+						},
+						"description": "Create college. Master admin only."
+					},
+					"response": []
+				},
+				{
+					"name": "Update College",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"ABC College Updated\",\n    \"address\": \"456 New Street\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/colleges/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"colleges",
+								"1"
+							]
+						},
+						"description": "Update college. Master admin only. Replace '1' with actual college ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Update College Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"inactive\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/colleges/1/status",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"colleges",
+								"1",
+								"status"
+							]
+						},
+						"description": "Activate/deactivate college. Master admin only. Replace '1' with actual college ID."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Students (Management)",
+			"item": [
+				{
+					"name": "List Students",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/students?department=Computer Science&status=active&page=1&limit=20",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"students"
+							],
+							"query": [
+								{
+									"key": "department",
+									"value": "Computer Science",
+									"description": "Filter by department",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "active",
+									"description": "Filter by status: active, warning, suspended"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "Search by name, email, or roll number",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						},
+						"description": "List students (management's college). Management only."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Student by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/students/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"students",
+								"1"
+							]
+						},
+						"description": "Get student by ID. Management only. Replace '1' with actual student ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Import Students",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"students\": [\n        {\n            \"id\": \"STU001\",\n            \"name\": \"John Doe\",\n            \"email\": \"john@example.com\",\n            \"department\": \"Computer Science\",\n            \"year\": \"2024\"\n        },\n        {\n            \"id\": \"STU002\",\n            \"name\": \"Jane Smith\",\n            \"email\": \"jane@example.com\",\n            \"department\": \"Electrical Engineering\",\n            \"year\": \"2024\"\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/students/import",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"students",
+								"import"
+							]
+						},
+						"description": "Bulk import students from JSON data. Management only."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Student",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Doe Updated\",\n    \"email\": \"john.updated@example.com\",\n    \"department\": \"Computer Science\",\n    \"year\": \"2025\",\n    \"status\": \"active\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/students/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"students",
+								"1"
+							]
+						},
+						"description": "Update student. Management only. Replace '1' with actual student ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Register Face Photo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": [],
+									"description": "Face photo (JPEG/PNG)"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/students/1/face",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"students",
+								"1",
+								"face"
+							]
+						},
+						"description": "Register/update face photo for student. Management only. Replace '1' with actual student ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Issue Disciplinary Action",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"actionType\": \"warning\",\n    \"reportId\": null,\n    \"notes\": \"First warning for misbehavior\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/students/1/action",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"students",
+								"1",
+								"action"
+							]
+						},
+						"description": "Issue warning / suspend student. Management only. Replace '1' with actual student ID. Action types: warning, suspension_1d, suspension_3d, suspension_7d, counseling, expulsion."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Student Incidents",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/students/1/incidents?page=1&limit=20",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"students",
+								"1",
+								"incidents"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						},
+						"description": "List incidents (reports) involving student. Management only. Replace '1' with actual student ID."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Faculty (Management)",
+			"item": [
+				{
+					"name": "List Faculty",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/faculty?department=Computer Science&status=active&page=1&limit=20",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"faculty"
+							],
+							"query": [
+								{
+									"key": "department",
+									"value": "Computer Science",
+									"description": "Filter by department",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "active",
+									"description": "Filter by status: active, inactive"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "Search by name, email, or faculty ID",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						},
+						"description": "List faculty (management's college). Management only."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Faculty by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/faculty/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"faculty",
+								"1"
+							]
+						},
+						"description": "Get faculty by ID. Management only. Replace '1' with actual faculty ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Import Faculty",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"faculty\": [\n        {\n            \"id\": \"FAC001\",\n            \"name\": \"Dr. John Doe\",\n            \"email\": \"john@example.com\",\n            \"department\": \"Computer Science\"\n        },\n        {\n            \"id\": \"FAC002\",\n            \"name\": \"Dr. Jane Smith\",\n            \"email\": \"jane@example.com\",\n            \"department\": \"Electrical Engineering\"\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/faculty/import",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"faculty",
+								"import"
+							]
+						},
+						"description": "Bulk import faculty from JSON data. Management only."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Faculty",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Dr. John Doe Updated\",\n    \"email\": \"john.updated@example.com\",\n    \"department\": \"Computer Science\",\n    \"status\": \"active\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/faculty/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"faculty",
+								"1"
+							]
+						},
+						"description": "Update faculty. Management only. Replace '1' with actual faculty ID."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reports",
+			"item": [
+				{
+					"name": "Create Report",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    pm.environment.set('report_id', response.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "incident_type",
+									"value": "ragging",
+									"type": "text"
+								},
+								{
+									"key": "location",
+									"value": "Building A, Room 101",
+									"type": "text"
+								},
+								{
+									"key": "occurred_at",
+									"value": "2024-01-28T10:00:00Z",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Incident description here",
+									"type": "text"
+								},
+								{
+									"key": "witnesses",
+									"value": "Witness names",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "anonymous",
+									"value": "false",
+									"type": "text"
+								},
+								{
+									"key": "media",
+									"type": "file",
+									"src": [],
+									"description": "Media files (images/videos). At least one required."
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/reports?incident_type=ragging&location=Building A, Room 101&occurred_at=2024-01-28T10:00:00Z&anonymous=false",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"reports"
+							],
+							"query": [
+								{
+									"key": "incident_type",
+									"value": "ragging",
+									"description": "ragging, fighting, misbehaviour, money, faculty, others"
+								},
+								{
+									"key": "location",
+									"value": "Building A, Room 101"
+								},
+								{
+									"key": "occurred_at",
+									"value": "2024-01-28T10:00:00Z",
+									"description": "ISO 8601 datetime"
+								},
+								{
+									"key": "description",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "witnesses",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "anonymous",
+									"value": "false"
+								}
+							]
+						},
+						"description": "Create incident report (faculty / student). Requires at least one media file (image/video)."
+					},
+					"response": []
+				},
+				{
+					"name": "List Reports",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/reports?college=1&type=ragging&status=pending&page=1&limit=20",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"reports"
+							],
+							"query": [
+								{
+									"key": "college",
+									"value": "1",
+									"description": "Filter by college ID (Master only)",
+									"disabled": true
+								},
+								{
+									"key": "type",
+									"value": "ragging",
+									"description": "Filter by incident type",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "pending",
+									"description": "Filter by status: pending, investigating, resolved, rejected"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "Search by location, description, or report ID",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						},
+						"description": "List reports with role-based filtering. Master: all, Management: own college, Faculty/Student: own reports."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Report by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/reports/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"reports",
+								"1"
+							]
+						},
+						"description": "Get report by ID. Role-scoped access. Replace '1' with actual report ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Report Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"investigating\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/reports/1/status",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"reports",
+								"1",
+								"status"
+							]
+						},
+						"description": "Update report status. Management and Master only. Replace '1' with actual report ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Get AI Detection Results",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/reports/1/ai-detection",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"reports",
+								"1",
+								"ai-detection"
+							]
+						},
+						"description": "Get AI detection results (faces) for a report. Management and Master only. Replace '1' with actual report ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Take Disciplinary Action",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"actionType\": \"warning\",\n    \"studentIds\": [1, 2],\n    \"notes\": \"Warning for involvement in incident\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/reports/1/action",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"reports",
+								"1",
+								"action"
+							]
+						},
+						"description": "Take disciplinary action on students. Management only. Replace '1' with actual report ID."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Media Upload",
+			"item": [
+				{
+					"name": "Upload Media",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": [],
+									"description": "Media file (image/video). Max size: 100MB"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/upload",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"upload"
+							]
+						},
+						"description": "Upload report media (image/video). Faculty and Student only."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Report Media",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/reports/1/media",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"reports",
+								"1",
+								"media"
+							]
+						},
+						"description": "Get report media URLs. Management, Master, and report owner can access. Replace '1' with actual report ID."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "System Logs (Master)",
+			"item": [
+				{
+					"name": "List Logs",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/logs?level=error&category=authentication&page=1&limit=20",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"logs"
+							],
+							"query": [
+								{
+									"key": "level",
+									"value": "error",
+									"description": "Filter by level: info, warning, error, success",
+									"disabled": true
+								},
+								{
+									"key": "category",
+									"value": "authentication",
+									"description": "Filter by category: authentication, report, user_management, system, database, ai_detection",
+									"disabled": true
+								},
+								{
+									"key": "user",
+									"value": "",
+									"description": "Filter by user ID",
+									"disabled": true
+								},
+								{
+									"key": "from",
+									"value": "",
+									"description": "Filter from date (ISO 8601)",
+									"disabled": true
+								},
+								{
+									"key": "to",
+									"value": "",
+									"description": "Filter to date (ISO 8601)",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						},
+						"description": "List system logs. Master admin only."
+					},
+					"response": []
+				},
+				{
+					"name": "Export Logs (CSV)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/logs/export?format=csv",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"logs",
+								"export"
+							],
+							"query": [
+								{
+									"key": "format",
+									"value": "csv",
+									"description": "Export format: csv or json"
+								},
+								{
+									"key": "level",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "category",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "user",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "from",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "to",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Export logs (CSV/JSON). Master admin only."
+					},
+					"response": []
+				},
+				{
+					"name": "Export Logs (JSON)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/logs/export?format=json",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"logs",
+								"export"
+							],
+							"query": [
+								{
+									"key": "format",
+									"value": "json",
+									"description": "Export format: csv or json"
+								}
+							]
+						},
+						"description": "Export logs (CSV/JSON). Master admin only."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dashboards",
+			"item": [
+				{
+					"name": "Master Dashboard",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/dashboard/master",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"dashboard",
+								"master"
+							]
+						},
+						"description": "Master dashboard stats. Master admin only."
+					},
+					"response": []
+				},
+				{
+					"name": "Management Dashboard",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/dashboard/management",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"dashboard",
+								"management"
+							]
+						},
+						"description": "Management dashboard stats. Management only."
+					},
+					"response": []
+				},
+				{
+					"name": "Faculty Dashboard",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/dashboard/faculty",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"dashboard",
+								"faculty"
+							]
+						},
+						"description": "Faculty dashboard stats. Faculty only."
+					},
+					"response": []
+				},
+				{
+					"name": "Student Dashboard",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/dashboard/student",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"dashboard",
+								"student"
+							]
+						},
+						"description": "Student dashboard stats. Student only."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Video/Incident Management",
+			"item": [
+				{
+					"name": "Upload Video",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    pm.environment.set('video_id', response.video_id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "video",
+									"type": "file",
+									"src": [],
+									"description": "Video file to upload (mp4, avi, mov, mkv, flv). Max size: 500MB"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/incident/upload-video",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"incident",
+								"upload-video"
+							]
+						},
+						"description": "Upload incident video for face recognition processing. Returns immediately with video_id. Processing happens in background."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Video Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/incident/status/{{video_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"incident",
+								"status",
+								"{{video_id}}"
+							]
+						},
+						"description": "Get processing status for a video. Status can be: pending, processing, completed, failed. Replace {{video_id}} with actual video ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Video Results",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/incident/results/{{video_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"incident",
+								"results",
+								"{{video_id}}"
+							]
+						},
+						"description": "Get face recognition results for a completed video. Returns detailed match information. Replace {{video_id}} with actual video ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Video",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/incident/{{video_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"incident",
+								"{{video_id}}"
+							]
+						},
+						"description": "Delete video and its processing results. Users can only delete their own videos, admins can delete any. Replace {{video_id}} with actual video ID."
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refresh_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "session_key",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "video_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user_role",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "report_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "college_id",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
