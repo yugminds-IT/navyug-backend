@@ -26,9 +26,13 @@ class Database:
             pool_size: Number of connections to maintain
             max_overflow: Maximum overflow connections
         """
-        self.database_url = database_url
+        # Ensure SQLAlchemy uses dialect "postgresql" (not "postgres"); fix Heroku-style URLs
+        url = database_url
+        if url.startswith("postgres://"):
+            url = "postgresql://" + url[len("postgres://"):]
+        self.database_url = url
         self.engine = create_engine(
-            database_url,
+            url,
             poolclass=QueuePool,
             pool_size=pool_size,
             max_overflow=max_overflow,

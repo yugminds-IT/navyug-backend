@@ -33,3 +33,4 @@ uploads/*
 debug_faces/*
 !debug_faces/.gitkeep
 alembic/versions/*.pyc
+.insightface

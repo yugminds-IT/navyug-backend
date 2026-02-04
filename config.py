@@ -21,19 +21,27 @@ UPLOADS_DIR = BASE_DIR / "uploads"
 COLLEGE_FACES_DIR = BASE_DIR / "college_faces"
 DEBUG_FACES_DIR = BASE_DIR / "debug_faces"
 
-# Create directories only when not S3-only (local fallbacks disabled when USE_S3_ONLY)
-UPLOADS_DIR.mkdir(exist_ok=True)
-if not os.getenv("USE_S3_ONLY", "true").lower() == "true":
-    COLLEGE_FACES_DIR.mkdir(exist_ok=True)
-    DEBUG_FACES_DIR.mkdir(exist_ok=True)
+# Create directories (skip in read-only containers; app will still start)
+try:
+    UPLOADS_DIR.mkdir(exist_ok=True)
+    if not os.getenv("USE_S3_ONLY", "true").lower() == "true":
+        COLLEGE_FACES_DIR.mkdir(exist_ok=True)
+        DEBUG_FACES_DIR.mkdir(exist_ok=True)
+except OSError:
+    pass
 
 # ============================================================================
 # Database Configuration (PostgreSQL)
 # ============================================================================
-DATABASE_URL = os.getenv(
+_raw_url = os.getenv(
     "DATABASE_URL",
     "postgresql://postgres:postgres@localhost:5432/face_recognition"
 )
+# SQLAlchemy 2 loads dialect "postgresql", not "postgres"; normalize Heroku-style URLs
+if _raw_url.startswith("postgres://"):
+    DATABASE_URL = "postgresql://" + _raw_url[len("postgres://"):]
+else:
+    DATABASE_URL = _raw_url
 DB_POOL_SIZE = int(os.getenv("DB_POOL_SIZE", "10"))
 DB_MAX_OVERFLOW = int(os.getenv("DB_MAX_OVERFLOW", "20"))
 

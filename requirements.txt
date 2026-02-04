@@ -1,40 +1,99 @@
 # CPU-only PyTorch first (saves ~2GB+; USE_GPU=false in production)
---index-url https://download.pytorch.org/whl/cpu
---extra-index-url https://pypi.org/simple
+#--index-url https://download.pytorch.org/whl/cpu
+#--extra-index-url https://pypi.org/simple
 # Core dependencies
-numpy
-opencv-python-headless
-insightface
-onnxruntime
-tqdm
+#numpy
+#opencv-python-headless
+#insightface
+#onnxruntime
+#tqdm
 
 # Web framework
+#fastapi
+#uvicorn[standard]
+#python-multipart
+#pydantic[email]
+
+# Database
+#sqlalchemy
+#psycopg2-binary
+#alembic
+
+# Authentication & Security
+#python-jose[cryptography]
+#passlib[bcrypt]
+#python-multipart
+
+# AWS S3
+#boto3
+#botocore
+
+# Multi-model fusion dependencies
+#torch
+#torchvision
+#facenet-pytorch
+
+# Email
+#fastapi-mail
+
+# Utilities
+#python-dotenv
+
+
+
+
+# -------------------------------
+# PyTorch CPU-only (CRITICAL)
+# -------------------------------
+--index-url https://download.pytorch.org/whl/cpu
+--extra-index-url https://pypi.org/simple
+
+torch==2.1.0
+torchvision==0.16.0
+
+# -------------------------------
+# Core CV / AI (numpy<2 for PyTorch/InsightFace compatibility)
+# -------------------------------
+numpy<2
+opencv-python-headless
+onnxruntime
+insightface
+facenet-pytorch
+tqdm
+
+# -------------------------------
+# Web
+# -------------------------------
 fastapi
 uvicorn[standard]
 python-multipart
 pydantic[email]
 
+# -------------------------------
 # Database
+# -------------------------------
 sqlalchemy
 psycopg2-binary
 alembic
 
-# Authentication & Security
+# -------------------------------
+# Auth & Security
+# -------------------------------
 python-jose[cryptography]
 passlib[bcrypt]
-python-multipart
 
+# -------------------------------
 # AWS S3
+# -------------------------------
 boto3
 botocore
 
-# Multi-model fusion dependencies
-torch
-torchvision
-facenet-pytorch
-
+# -------------------------------
 # Email
+# -------------------------------
 fastapi-mail
 
+# -------------------------------
 # Utilities
+# -------------------------------
 python-dotenv

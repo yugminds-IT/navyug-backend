@@ -17,7 +17,7 @@ from fastapi_mail import FastMail, ConnectionConfig
 import config
 from database.connection import Database
 from database.models import User, UserRole
-from sqlalchemy import or_
+from sqlalchemy import or_, text
 from storage.s3_client import S3Client
 from core.face_database import FaceDatabase
 from core.video_processor import VideoProcessor
@@ -128,83 +128,75 @@ async def lifespan(app: FastAPI):
         logger.warning("SMTP credentials not set (SMTP_USER/SMTP_PASSWORD). OTP emails will not be sent.")
         app.state.mail = None
     
-    # Initialize and load face database
+    # Initialize face database (empty); load in background so app starts fast for Coolify health check
     config.face_db = FaceDatabase(similarity_threshold=config.FACE_MATCH_THRESHOLD)
-    
-    # Load face database for detection: when USE_S3_ONLY, fetch from S3 first; else DB or directory
-    try:
-        with config.db.get_session() as db:
-            # USE_S3_ONLY: fetch student faces from S3 (profile + face-gallery + embeddings) and use for detection
-            if getattr(config, "USE_S3_ONLY", True) and config.s3_client:
-                try:
-                    from database.models import College
-                    colleges = db.query(College).all()
-                    for college in colleges:
-                        if college.college_code:
-                            loaded = config.face_db.load_from_s3(
-                                college.college_code,
-                                s3_client=config.s3_client,
-                                ctx_id=config.CTX_ID,
-                            )
-                            if loaded:
-                                logger.info(f"Loaded {loaded} persons from S3 for college {college.college_code} (used for detection)")
-                    if config.face_db.get_database_size() > 0:
-                        logger.info("Face DB for detection populated from S3")
-                except Exception as s3_err:
-                    logger.warning(f"load_from_s3 failed: {s3_err}")
-            # Fallback: if no S3 data, load from DB (Person table) or local directory
-            if config.face_db.get_database_size() == 0:
-                persons = PersonService.get_all_persons(db, active_only=True)
-                if persons:
-                    logger.info(f"Found {len(persons)} persons in database; loading into face DB for detection")
-                    for person in persons:
-                        embeddings = PersonService.get_embeddings(db, person.person_id)
-                        if embeddings:
-                            for emb in embeddings:
-                                config.face_db.add_person(person.person_id, person.name, emb)
-                    logger.info(f"Loaded {len(persons)} persons from database")
-                elif not getattr(config, "USE_S3_ONLY", True) and config.COLLEGE_FACES_DIR.exists():
-                    logger.info(f"Loading college faces from directory: {config.COLLEGE_FACES_DIR}")
-                    loaded = config.face_db.load_from_directory(
-                        str(config.COLLEGE_FACES_DIR),
-                        ctx_id=config.CTX_ID
-                    )
-                    logger.info(f"Successfully loaded {loaded} persons from directory")
-                else:
-                    if getattr(config, "USE_S3_ONLY", True):
-                        logger.info("USE_S3_ONLY: no persons loaded from S3 or DB; face DB empty")
-                    else:
-                        logger.warning("College faces directory not found and no persons in DB")
-            # Sync student embeddings to S3 (embeddings/face_embedding.npy per student)
-            if config.s3_client and config.face_db.get_database_size() > 0:
-                all_emb = config.face_db.get_all_embeddings()
-                for person_id, emb_list in all_emb.items():
-                    if not emb_list:
-                        continue
-                    student = db.query(User).filter(
-                        User.role == UserRole.STUDENT,
-                        or_(
-                            User.roll_number == person_id,
-                            User.login_id == person_id,
-                            User.college_student_id == person_id,
-                        ),
-                    ).first()
-                    if student and student.college:
-                        PersonService.upload_embeddings_to_s3(
-                            person_id, emb_list, student.college.college_code
+
+    def _load_face_db_sync():
+        """Load face DB from S3/DB/directory (runs in thread so startup is fast)."""
+        try:
+            with config.db.get_session() as db:
+                if getattr(config, "USE_S3_ONLY", True) and config.s3_client:
+                    try:
+                        from database.models import College
+                        colleges = db.query(College).all()
+                        for college in colleges:
+                            if college.college_code:
+                                loaded = config.face_db.load_from_s3(
+                                    college.college_code,
+                                    s3_client=config.s3_client,
+                                    ctx_id=config.CTX_ID,
+                                )
+                                if loaded:
+                                    logger.info(f"Loaded {loaded} persons from S3 for college {college.college_code}")
+                        if config.face_db.get_database_size() > 0:
+                            logger.info("Face DB populated from S3")
+                    except Exception as s3_err:
+                        logger.warning(f"load_from_s3 failed: {s3_err}")
+                if config.face_db.get_database_size() == 0:
+                    persons = PersonService.get_all_persons(db, active_only=True)
+                    if persons:
+                        for person in persons:
+                            embeddings = PersonService.get_embeddings(db, person.person_id)
+                            if embeddings:
+                                for emb in embeddings:
+                                    config.face_db.add_person(person.person_id, person.name, emb)
+                        logger.info(f"Loaded {len(persons)} persons from database")
+                    elif not getattr(config, "USE_S3_ONLY", True) and config.COLLEGE_FACES_DIR.exists():
+                        loaded = config.face_db.load_from_directory(
+                            str(config.COLLEGE_FACES_DIR), ctx_id=config.CTX_ID
                         )
-    except Exception as e:
-        logger.error(f"Error loading face database: {e}", exc_info=True)
-        logger.warning("The system will start but won't be able to match faces.")
-    
+                        logger.info(f"Loaded {loaded} persons from directory")
+                if config.s3_client and config.face_db.get_database_size() > 0:
+                    all_emb = config.face_db.get_all_embeddings()
+                    for person_id, emb_list in all_emb.items():
+                        if not emb_list:
+                            continue
+                        student = db.query(User).filter(
+                            User.role == UserRole.STUDENT,
+                            or_(
+                                User.roll_number == person_id,
+                                User.login_id == person_id,
+                                User.college_student_id == person_id,
+                            ),
+                        ).first()
+                        if student and student.college:
+                            PersonService.upload_embeddings_to_s3(
+                                person_id, emb_list, student.college.college_code
+                            )
+        except Exception as e:
+            logger.error(f"Error loading face database: {e}", exc_info=True)
+
     logger.info("=" * 60)
-    logger.info("Server ready!")
+    logger.info("Server ready! (face DB loading in background)")
     logger.info(f"Environment: {config.ENVIRONMENT}")
     logger.info(f"API Docs: http://localhost:8000/docs")
     logger.info("=" * 60)
-    
+
+    # Start face DB load in background so Coolify health check passes quickly
+    asyncio.create_task(asyncio.to_thread(_load_face_db_sync))
+
     yield
-    
+
     # Cleanup on shutdown
     logger.info("Shutting down...")
     if config.db:
@@ -561,9 +553,13 @@ async def health_check():
     
     # Check database
     try:
-        with config.db.get_session() as db:
-            db.execute("SELECT 1")
-        health_status["checks"]["database"] = {"status": "ok"}
+        if config.db is None:
+            health_status["checks"]["database"] = {"status": "error", "error": "not initialized"}
+            health_status["status"] = "degraded"
+        else:
+            with config.db.get_session() as db:
+                db.execute(text("SELECT 1"))
+            health_status["checks"]["database"] = {"status": "ok"}
     except Exception as e:
         health_status["checks"]["database"] = {"status": "error", "error": str(e)}
         health_status["status"] = "degraded"
@@ -591,11 +587,14 @@ async def health_check():
         }
     
     # Check face database
-    db_loaded = config.face_db is not None and config.face_db.get_database_size() > 0
-    health_status["checks"]["face_database"] = {
-        "loaded": db_loaded,
-        "size": config.face_db.get_database_size() if config.face_db else 0
-    }
+    try:
+        db_loaded = config.face_db is not None and config.face_db.get_database_size() > 0
+        health_status["checks"]["face_database"] = {
+            "loaded": db_loaded,
+            "size": config.face_db.get_database_size() if config.face_db else 0
+        }
+    except Exception:
+        health_status["checks"]["face_database"] = {"loaded": False, "size": 0}
     if not db_loaded:
         health_status["status"] = "degraded"
     
